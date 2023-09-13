@@ -33,6 +33,26 @@ public class GroupGenerator {
         }
 
     }
+    private static List<String> readStudentNamesFromFile(String fileName) {
+        List<String> studentNames = new ArrayList<>();
+
+        try {
+            File file = new File(fileName);
+            Scanner scanner = new Scanner(file);
+            while (scanner.hasNextLine()) {
+                String name = scanner.nextLine().trim();
+                if (!name.isEmpty()) {
+                    studentNames.add(name);
+                }
+            }
+            scanner.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found: " + fileName);
+        }
+
+        return studentNames;
+    }
+
 
     // Generates random groups from the list of student names
     private static List<List<String>> generateGroupsByNum(List<String> studentNames, int numGroups) {
@@ -59,6 +79,25 @@ public class GroupGenerator {
                 currentIndex++;
             }
 
+            groups.add(group);
+        }
+
+        return groups;
+    }
+    private static List<List<String>> generateGroupsByMax(List<String> studentNames, int maxStudentsInGroup) {
+        List<List<String>> groups = new ArrayList<>();
+
+        // Shuffle the student names randomly
+        Collections.shuffle(studentNames);
+
+        int numStudents = studentNames.size();
+        int numGroups = (int) Math.ceil((double) numStudents / maxStudentsInGroup);
+
+        int currentIndex = 0;
+        for (int i = 0; i < numGroups; i++) {
+            int startIndex = i * maxStudentsInGroup;
+            int endIndex = Math.min(startIndex + maxStudentsInGroup, numStudents);
+            List<String> group = studentNames.subList(startIndex, endIndex);
             groups.add(group);
         }
 
